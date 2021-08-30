@@ -1,0 +1,29 @@
+-- reconstruct the database
+DROP DATABASE IF EXISTS MusicListDB;
+CREATE DATABASE MusicListDB;
+
+USE MusicListDB;
+
+CREATE TABLE user(
+	id INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT,
+    name VARCHAR(20) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE song(
+	id INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT,
+    name VARCHAR(48) NOT NULL DEFAULT("unknown"),
+    artist VARCHAR(48) NOT NULL DEFAULT("unknown"),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE userSavedSong(
+	id INT UNSIGNED UNIQUE NOT NULL AUTO_INCREMENT,
+    userId INT UNSIGNED NOT NULL,
+    songId INT UNSIGNED NOT NULL,
+    CONSTRAINT FOREIGN KEY fk_userSavedSong_user(userId)
+		REFERENCES user(id),
+	CONSTRAINT FOREIGN KEY fk_userSavedSong_song(songId)
+		REFERENCES song(id),
+	PRIMARY KEY(id)
+);
