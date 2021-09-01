@@ -47,4 +47,12 @@ public interface UserDataDao {
      * @throws DataAccessException 
      */
     public void saveSongToUser(int userId, int songId) throws DataAccessException;
+    
+    /**
+     * Deletes a saved song under a user Id
+     * @param userId the user's id
+     * @param songId the song's id
+     * @throws DataAccessException 
+     */
+    public void deleteSongFromUser(int userId, int songId) throws DataAccessException;
 }

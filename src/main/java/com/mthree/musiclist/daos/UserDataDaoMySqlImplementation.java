@@ -53,6 +53,13 @@ public class UserDataDaoMySqlImplementation implements UserDataDao {
         "   (?, ?) "
     ;
     
+    final private static String DELETE_USER_SAVED_SONG =
+        "DELETE FROM userSavedSong " +
+        "WHERE " +
+        "   userId = ? AND " +
+        "   songId = ? "
+    ;
+    
     /**
      * Gets a user
      * @param id the user's id
@@ -121,6 +128,27 @@ public class UserDataDaoMySqlImplementation implements UserDataDao {
                 PreparedStatement preparedStatement;
                 
                 preparedStatement = connection.prepareStatement(INSERT_USER_SAVED_SONG);
+                preparedStatement.setInt(1, userId);
+                preparedStatement.setInt(2, songId);
+                
+                return preparedStatement;
+            }
+        );
+    }
+    
+    /**
+     * Deletes a saved song under a user Id
+     * @param userId the user's id
+     * @param songId the song's id
+     * @throws DataAccessException 
+     */
+    @Override
+    public void deleteSongFromUser(int userId, int songId) throws DataAccessException {
+        jdbcTemplate.update(
+            (Connection connection) -> {
+                PreparedStatement preparedStatement;
+                
+                preparedStatement = connection.prepareStatement(DELETE_USER_SAVED_SONG);
                 preparedStatement.setInt(1, userId);
                 preparedStatement.setInt(2, songId);
                 

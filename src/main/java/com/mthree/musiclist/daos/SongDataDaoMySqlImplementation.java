@@ -32,7 +32,7 @@ public class SongDataDaoMySqlImplementation implements SongDataDao {
     ;
     
     final private static String INSERT_SONG =
-        "INSERT INTO song(id, name, artist) VALUES " +
+        "INSERT IGNORE INTO song(id, name, artist) VALUES " +
         "   (?, ?, ?) "
     ;
     
