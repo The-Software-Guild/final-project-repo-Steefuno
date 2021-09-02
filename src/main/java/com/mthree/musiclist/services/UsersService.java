@@ -14,6 +14,7 @@ import com.mthree.musiclist.models.User;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -78,7 +79,7 @@ public class UsersService {
                 userDataDao.addUser(name),
                 name
             );
-        } catch (DataAccessException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new Exception(
                 String.format("Cannot use name %s", name),
                 e
@@ -123,6 +124,12 @@ public class UsersService {
         return isSaved;
     }
     
+    /**
+     * Saves a song to the user's list
+     * @param userId the user's id
+     * @param songId the song's id
+     * @throws Exception 
+     */
     public void saveSongToUser(int userId, int songId) throws Exception {
         Song song;
         
@@ -141,7 +148,7 @@ public class UsersService {
             songDataDao.addSong(
                 song
             );
-        } catch(DataAccessException e) {
+        } catch(DataIntegrityViolationException e) {
             throw new Exception(
                 String.format("Could not insert song %d", song.getId()),
                 e
@@ -151,7 +158,7 @@ public class UsersService {
         // Save the song to user
         try {
             userDataDao.saveSongToUser(userId, song.getId());
-        } catch(DataAccessException e) {
+        } catch(DataIntegrityViolationException e) {
             throw new Exception(
                 String.format("Could not save song %d to user %d", song.getId(), userId),
                 e
@@ -159,10 +166,16 @@ public class UsersService {
         }
     }
     
+    /**
+     * Removes a song saved on the user's list
+     * @param userId the user's id
+     * @param songId the song's id
+     * @throws Exception 
+     */
     public void deleteSongFromUser(int userId, int songId) throws Exception {
         try {
             userDataDao.deleteSongFromUser(userId, songId);
-        } catch(DataAccessException e) {
+        } catch(DataIntegrityViolationException e) {
             throw new Exception(
                 e
             );

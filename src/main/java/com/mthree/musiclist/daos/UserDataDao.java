@@ -10,6 +10,7 @@ import com.mthree.musiclist.models.Song;
 import com.mthree.musiclist.models.User;
 import java.util.List;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 /**
  * 
@@ -38,7 +39,7 @@ public interface UserDataDao {
      * @return the user's ID
      * @throws DataAccessException 
      */
-    public int addUser(String name) throws DataAccessException;
+    public int addUser(String name) throws DataIntegrityViolationException;
     
     /**
      * Gets the songs saved by the user
@@ -63,7 +64,7 @@ public interface UserDataDao {
      * @param songId the song's id
      * @throws DataAccessException 
      */
-    public void saveSongToUser(int userId, int songId) throws DataAccessException;
+    public void saveSongToUser(int userId, int songId) throws DataIntegrityViolationException;
     
     /**
      * Deletes a saved song under a user Id
@@ -71,5 +72,5 @@ public interface UserDataDao {
      * @param songId the song's id
      * @throws DataAccessException 
      */
-    public void deleteSongFromUser(int userId, int songId) throws DataAccessException;
+    public void deleteSongFromUser(int userId, int songId) throws DataIntegrityViolationException;
 }

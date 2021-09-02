@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -111,7 +112,7 @@ public class UserDataDaoMySqlImplementation implements UserDataDao {
      * @throws DataAccessException 
      */
     @Override
-    public int addUser(String name) throws DataAccessException {
+    public int addUser(String name) throws DataIntegrityViolationException {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         
         jdbcTemplate.update(
@@ -173,7 +174,7 @@ public class UserDataDaoMySqlImplementation implements UserDataDao {
      * @throws DataAccessException 
      */
     @Override
-    public void saveSongToUser(int userId, int songId) throws DataAccessException {
+    public void saveSongToUser(int userId, int songId) throws DataIntegrityViolationException {
         jdbcTemplate.update(
             (Connection connection) -> {
                 PreparedStatement preparedStatement;
@@ -194,7 +195,7 @@ public class UserDataDaoMySqlImplementation implements UserDataDao {
      * @throws DataAccessException 
      */
     @Override
-    public void deleteSongFromUser(int userId, int songId) throws DataAccessException {
+    public void deleteSongFromUser(int userId, int songId) throws DataIntegrityViolationException {
         jdbcTemplate.update(
             (Connection connection) -> {
                 PreparedStatement preparedStatement;

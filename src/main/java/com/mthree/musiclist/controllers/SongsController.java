@@ -50,7 +50,7 @@ public class SongsController {
         
             model.addAttribute("name", user.getName());
             redirectAttributes.addFlashAttribute("name", user.getName());
-            model.addAttribute("saved", usersService.userHasSongSaved(user.getId(), id);
+            model.addAttribute("saved", usersService.userHasSongSaved(user.getId(), id));
         } catch(Exception e) {
             // do nothing
         }
