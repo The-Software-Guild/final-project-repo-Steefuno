@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 // https://www.javadoc.io/doc/com.konghq/unirest-java/3.1.00/kong/unirest/json/JSONObject.html
 // https://rapidapi.com/brianiswu/api/genius/
 @Component
-public class SongSearchDaoGeniusApiUnirestImplementation {
+public class SongSearchDaoGeniusApiUnirestImplementation implements SongSearchDao {
     final private static String HEADER_KEY_HOST =
         "x-rapidapi-host"
     ;
@@ -53,6 +53,7 @@ public class SongSearchDaoGeniusApiUnirestImplementation {
      * @return the Song information
      * @throws Exception
      */
+    @Override
     public Song getSong(int id) throws Exception {
         HttpResponse<JsonNode> response;
         JSONObject songJson;
@@ -104,6 +105,7 @@ public class SongSearchDaoGeniusApiUnirestImplementation {
      * @return an array of the resulting songs
      * @throws Exception
      */
+    @Override
     public Song[] searchSongs(String query) throws Exception {
         HttpResponse<JsonNode> response;
         JSONArray songsJson;
@@ -114,7 +116,7 @@ public class SongSearchDaoGeniusApiUnirestImplementation {
             response = Unirest.get(SEARCH_SONGS)
                 .header(HEADER_KEY_HOST, HEADER_VALUE_HOST)
                 .header(HEADER_KEY_API_KEY, HEADER_VALUE_API_KEY)
-                .routeParam("q", query)
+                .queryString("q", query)
                 .asJson()
             ;
         } catch (UnirestException e) {

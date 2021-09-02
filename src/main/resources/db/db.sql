@@ -27,3 +27,5 @@ CREATE TABLE userSavedSong(
 		REFERENCES song(id),
 	PRIMARY KEY(id)
 );
+
+SELECT * FROM user;

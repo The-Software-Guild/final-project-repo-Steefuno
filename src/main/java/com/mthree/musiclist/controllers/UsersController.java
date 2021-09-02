@@ -31,6 +31,27 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
     
+    @GetMapping("/")
+    public String displayIndex(
+        @CookieValue(value = "uid", defaultValue = "-1") String idCookie,
+        Model model
+    ) {
+        int id;
+        User user;
+        
+        // Get the user id
+        try {
+            id = Integer.parseInt(idCookie);
+            user = usersService.getUser(id);
+        
+            model.addAttribute("name", user.getName());
+        } catch(Exception e) {
+            // do nothing
+        }
+        
+        return "/index";
+    }
+    
     @GetMapping("/getProfile")
     public String displayProfile(
         @CookieValue(value = "uid", defaultValue = "-1") String idCookie, 
@@ -47,7 +68,7 @@ public class UsersController {
             id = Integer.parseInt(idCookie);
         } catch(NumberFormatException e) {
             redirectAttributes.addFlashAttribute(
-                "errors",
+                "notifications",
                 new String[]{
                     "You must be logged in to see your profile"
                 }
@@ -60,21 +81,22 @@ public class UsersController {
             user = usersService.getUser(id);
         } catch(Exception e) {
             redirectAttributes.addFlashAttribute(
-                "errors",
+                "notifications",
                 new String[]{
                     e.getMessage()
                 }
             );
             return "redirect:/login";
         }
-        model.addAttribute("user", user);
+        model.addAttribute("name", user.getName());
+        redirectAttributes.addFlashAttribute("name", user.getName());
         
         // Get the saved songs
         try {
             songs = usersService.getUserSavedSongs(id);
         } catch(Exception e) {
             redirectAttributes.addFlashAttribute(
-                "errors",
+                "notifications",
                 new String[]{
                     e.getMessage()
                 }
@@ -95,13 +117,14 @@ public class UsersController {
         RedirectAttributes redirectAttributes
     ) {
         int id;
+        User user;
         
         // Get the user id
         try {
             id = Integer.parseInt(idCookie);
         } catch(NumberFormatException e) {
             redirectAttributes.addFlashAttribute(
-                "errors",
+                "notifications",
                 new String[]{
                     "You must be logged in to save a song"
                 }
@@ -111,23 +134,24 @@ public class UsersController {
         
         // Make sure the user exists
         try {
-            usersService.getUser(id);
+            user = usersService.getUser(id);
         } catch(Exception e) {
             redirectAttributes.addFlashAttribute(
-                "errors",
+                "notifications",
                 new String[]{
                     e.getMessage()
                 }
             );
             return "redirect:/login";
         }
+        redirectAttributes.addFlashAttribute("name", user.getName());
         
         // Save the song
         try {
             usersService.saveSongToUser(id, songId);
         } catch(Exception e) {
             redirectAttributes.addFlashAttribute(
-                "errors",
+                "notifications",
                 new String[]{
                     e.getMessage()
                 }
@@ -135,7 +159,7 @@ public class UsersController {
             return "redirect:/getProfile";
         }
         
-        return "redirect:/getSong?songId=" + songId;
+        return "redirect:/getSong?id=" + songId;
     }
     
     @PostMapping("/deleteSong")
@@ -147,13 +171,14 @@ public class UsersController {
         RedirectAttributes redirectAttributes
     ) {
         int id;
+        User user;
         
         // Get the user id
         try {
             id = Integer.parseInt(idCookie);
         } catch(NumberFormatException e) {
             redirectAttributes.addFlashAttribute(
-                "errors",
+                "notifications",
                 new String[]{
                     "You must be logged in to save a song"
                 }
@@ -163,31 +188,54 @@ public class UsersController {
         
         // Make sure the user exists
         try {
-            usersService.getUser(id);
+            user = usersService.getUser(id);
         } catch(Exception e) {
             redirectAttributes.addFlashAttribute(
-                "errors",
+                "notifications",
                 new String[]{
                     e.getMessage()
                 }
             );
             return "redirect:/login";
         }
+        redirectAttributes.addFlashAttribute("name", user.getName());
         
         // Delete the song
         try {
             usersService.deleteSongFromUser(id, songId);
         } catch(Exception e) {
             redirectAttributes.addFlashAttribute(
-                "errors",
+                "notifications",
                 new String[]{
                     e.getMessage()
                 }
             );
             return "redirect:/getProfile";
         }
+        return "redirect:/getSong?id=" + songId;
+    }
+    
+    @GetMapping("/login")
+    public String login(
+        @CookieValue(value = "uid", defaultValue = "-1") String idCookie,
+        HttpServletRequest request,
+        HttpServletResponse response,
+        Model model
+    ) {
+        int id;
+        User user;
         
-        return "redirect:/getSong?songId=" + songId;
+        // Get the user id
+        try {
+            id = Integer.parseInt(idCookie);
+            user = usersService.getUser(id);
+        
+            model.addAttribute("name", user.getName());
+        } catch(Exception e) {
+            // do nothing
+        }
+        
+        return "/login";
     }
     
     @PostMapping("/login")
@@ -196,41 +244,101 @@ public class UsersController {
         HttpServletResponse response,
         RedirectAttributes redirectAttributes
     ) {
-        int id;
+        String name;
         Cookie cookie;
+        User user;
         
-        // Check if id is inputted
+        // Get the name
+        name = request.getParameter("name");
+        
+        // Check if id exists
         try {
-            id = Integer.parseInt(
-                request.getParameter("id")
-            );
-        } catch(NumberFormatException e) {
+            user = usersService.getUser(name);
+        } catch(Exception e) {
             redirectAttributes.addFlashAttribute(
-                "errors",
+                "notifications",
+                e.getMessage()
+            );
+            return "redirect:/login";
+        }
+        redirectAttributes.addFlashAttribute("name", user.getName());
+        
+        // Store UID as cookie
+        cookie = new Cookie("uid", Integer.toString(user.getId()));
+        cookie.setMaxAge(24 * 60 * 60); // expires in a day
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        
+        return "redirect:/getProfile";
+    }
+    
+    @PostMapping("/register")
+    public String register(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        RedirectAttributes redirectAttributes
+    ) {
+        String name;
+        Cookie cookie;
+        User user;
+        
+        // validate name
+        name = request.getParameter("name");
+        
+        if (name.length() < 3) {
+            redirectAttributes.addFlashAttribute(
+                "notifications",
                 new String[]{
-                    "Invalid ID"
+                    "Name must be at least 3 characters"
+                }
+            );
+            return "redirect:/login";
+        }
+        if (name.length() > 20) {
+            redirectAttributes.addFlashAttribute(
+                "notifications",
+                new String[]{
+                    "Name cannot be longer than 20 characters"
                 }
             );
             return "redirect:/login";
         }
         
-        // Check if id exists
+        // Try adding the user
         try {
-            usersService.getUser(id);
+            user = usersService.addUser(name);
         } catch(Exception e) {
             redirectAttributes.addFlashAttribute(
-                "errors",
+                "notifications",
                 e.getMessage()
             );
             return "redirect:/login";
         }
+        redirectAttributes.addFlashAttribute("name", user.getName());
         
         // Store UID as cookie
-        cookie = new Cookie("uid", Integer.toString(id));
+        cookie = new Cookie("uid", Integer.toString(user.getId()));
         cookie.setMaxAge(24 * 60 * 60); // expires in a day
         cookie.setPath("/");
-        
         response.addCookie(cookie);
+        
         return "redirect:/getProfile";
+    }
+    
+    
+    @GetMapping("/logout")
+    public String logout(
+        HttpServletResponse response,
+        RedirectAttributes redirectAttributes
+    ) {
+        Cookie cookie;
+        
+        // Store UID as cookie
+        cookie = new Cookie("uid", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        
+        return "redirect:/login";
     }
 }

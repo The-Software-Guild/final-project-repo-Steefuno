@@ -49,6 +49,23 @@ public class UsersService {
     }
     
     /**
+     * Gets a user
+     * @param name the user's name
+     * @return the user data
+     * @throws Exception 
+     */
+    public User getUser(String name) throws Exception {
+        User user;
+        try {
+            user = userDataDao.getUser(name);
+        } catch (DataAccessException e) {
+            throw new Exception("Invalid Name", e);
+        }
+        
+        return user;
+    }
+    
+    /**
      * Adds a new user
      * @param name the user's name
      * @return the user data
@@ -86,6 +103,24 @@ public class UsersService {
         }
         
         return songs;
+    }
+    
+    /**
+     * Gets the list of songs saved by a user
+     * @param userId the user's id
+     * @param songId the song's id
+     * @return if the user has the song saved
+     * @throws Exception 
+     */
+    public boolean userHasSongSaved(int userId, int songId) throws Exception {
+        boolean isSaved;
+        try {
+            isSaved = userDataDao.userHasSongSaved(userId, songId);
+        } catch (DataAccessException e) {
+            throw new Exception("Internal Error", e);
+        }
+            
+        return isSaved;
     }
     
     public void saveSongToUser(int userId, int songId) throws Exception {

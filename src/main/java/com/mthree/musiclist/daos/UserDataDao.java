@@ -25,6 +25,14 @@ public interface UserDataDao {
     public User getUser(int id) throws DataAccessException;
     
     /**
+     * Gets a user
+     * @param name the user's name
+     * @return the user
+     * @throws DataAccessException 
+     */
+    public User getUser(String name) throws DataAccessException;
+    
+    /**
      * Adds a new user
      * @param name the user's name
      * @return the user's ID
@@ -39,6 +47,15 @@ public interface UserDataDao {
      * @throws DataAccessException 
      */
     public List<Song> getUserSavedSongs(int id) throws DataAccessException;
+    
+    /**
+     * Gets the list of songs saved by a user
+     * @param userId the user's id
+     * @param songId the song's id
+     * @return if the user has the song saved
+     * @throws DataAccessException 
+     */
+    public boolean userHasSongSaved(int userId, int songId) throws DataAccessException;
     
     /**
      * Saves a song under a userId

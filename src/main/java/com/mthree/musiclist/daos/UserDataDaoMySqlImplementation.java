@@ -36,6 +36,12 @@ public class UserDataDaoMySqlImplementation implements UserDataDao {
         "WHERE id = ? "
     ;
     
+    final private static String SELECT_USER_BY_NAME =
+        "SELECT id, name " +
+        "FROM user " +
+        "WHERE name = ? "
+    ;
+    
     final private static String INSERT_USER =
         "INSERT INTO user(name) VALUES " +
         "   (?) "
@@ -46,6 +52,14 @@ public class UserDataDaoMySqlImplementation implements UserDataDao {
         "FROM song " +
         "INNER JOIN userSavedSong ON userSavedSong.songId = song.id " +
         "WHERE userSavedSong.userId = ? "
+    ;
+    
+    final private static String SELECT_USER_SAVED_SONG =
+        "SELECT 1, 'a' " +
+        "FROM userSavedSong " +
+        "WHERE " +
+        "   userSavedSong.userId = ? AND " +
+        "   userSavedSong.songId = ? "
     ;
     
     final private static String INSERT_USER_SAVED_SONG = 
@@ -71,6 +85,21 @@ public class UserDataDaoMySqlImplementation implements UserDataDao {
         User user;
         
         user = (User) jdbcTemplate.queryForObject(SELECT_USER_BY_ID, new UserMapper(), id);
+        
+        return user;
+    }
+    
+    /**
+     * Gets a user
+     * @param name the user's name
+     * @return the user
+     * @throws DataAccessException 
+     */
+    @Override
+    public User getUser(String name) throws DataAccessException {
+        User user;
+        
+        user = (User) jdbcTemplate.queryForObject(SELECT_USER_BY_NAME, new UserMapper(), name);
         
         return user;
     }
@@ -113,6 +142,28 @@ public class UserDataDaoMySqlImplementation implements UserDataDao {
         songs = jdbcTemplate.query(SELECT_USER_SAVED_SONGS, new SongMapper(), id);
         
         return songs;
+    }
+    
+    /**
+     * Gets the list of songs saved by a user
+     * @param userId the user's id
+     * @param songId the song's id
+     * @return if the user has the song saved
+     * @throws DataAccessException 
+     */
+    @Override
+    public boolean userHasSongSaved(int userId, int songId) throws DataAccessException {
+        boolean isSaved;
+        isSaved = !(
+            jdbcTemplate.query(
+                SELECT_USER_SAVED_SONG, 
+                new UserMapper(), 
+                userId, 
+                songId
+            ).isEmpty()
+        );
+        
+        return isSaved;
     }
     
     /**
