@@ -54,6 +54,7 @@
                 width: 100%;
                 padding: 4px;
                 padding-inline-start: 1em;
+                border-radius: 0.5em;
             "
         >
             <a href="/" class="text-dark">
@@ -128,11 +129,24 @@
         <!-- Song information -->
         <div
             style="
-                width: 90%;
+                width: 70%;
                 margin: 4px auto;
                 margin-top: 2em;
             "
         >
+            <img
+                src="#"
+                th:src="${song.getImageUrl()}"
+                alt="Song Image"
+                style="
+                    align-content: center;
+                    border: 1px;
+                    border-style: solid;
+                    margin: 0.5em auto;
+                    display: block;
+                    height: 50vh;
+                "
+            >
             <div
                 class="container"
                 style="
@@ -164,55 +178,78 @@
                         <h6>[[${song.getArtist()}]]</h6>
                     </div>
                 </div>
+                <div class="row">
+                    <div
+                        class="col"
+                        style="
+                            text-align: right;
+                        "
+                    >
+                        <a
+                            href="#"
+                            th:href="${song.getLyricsUrl()}" 
+                            target="_blank"
+                        >
+                            View Song Lyrics
+                        </a>
+                    </div>
+                </div>
             </div>
 
-            <!-- Save Song -->
-            <form
-                action="/saveSong"
-                method="POST"
-                th:if="${saved} == false"
+            <div
+                class="containter"
             >
-                <input
-                    type="hidden"
-                    name="songId"
-                    id="songId"
-                    th:value="${song.getId()}"
-                />
-                <input
-                    type="submit"
-                    class="btn btn-outline-primary btn-lg"
-                    style="
-                        background-color: #aaddff;
-                        margin-top: 0.5em;
-                    "
-                    value="Save Song"
+                <!-- Save Song -->
+                <form
+                    action="/saveSong"
+                    method="POST"
+                    th:if="${saved} == false"
                 >
-                </input>
-            </form>
+                    <input
+                        type="hidden"
+                        name="songId"
+                        id="songId"
+                        th:value="${song.getId()}"
+                    />
+                    <input
+                        type="submit"
+                        class="btn btn-outline-primary btn-lg"
+                        style="
+                            background-color: #aaddff;
+                            margin-top: 0.5em;
+                        "
+                        value="Save Song"
+                    >
+                    </input>
+                </form>
 
-            <!-- Delete Song -->
-            <form
-                action="/deleteSong"
-                method="POST"
-                th:if="${saved} == true"
-            >
-                <input
-                    type="hidden"
-                    name="songId"
-                    id="songId"
-                    th:value="${song.getId()}"
-                />
-                <input
-                    type="submit"
-                    class="btn btn-outline-primary btn-lg"
-                    style="
-                        background-color: #aaddff;
-                        margin-top: 0.5em;
-                    "
-                    value="Delete Song"
+                <!-- Delete Song -->
+                <form
+                    action="/deleteSong"
+                    method="POST"
+                    th:if="${saved} == true"
                 >
-                </input>
-            </form>
+                    <input
+                        type="hidden"
+                        name="songId"
+                        id="songId"
+                        th:value="${song.getId()}"
+                    />
+                    <input
+                        type="submit"
+                        class="btn btn-outline-primary btn-lg"
+                        style="
+                            background-color: #aaddff;
+                            margin-top: 0.5em;
+                        "
+                        value="Delete Song"
+                    >
+                    </input>
+                </form>
+
+                <!-- View Song Lyrics -->
+                
+            </div>
         </div>
     </div>
     

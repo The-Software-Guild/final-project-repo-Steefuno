@@ -7,6 +7,7 @@
 package com.mthree.musiclist.controllers;
 
 import com.mthree.musiclist.models.Song;
+import com.mthree.musiclist.models.SongDetailed;
 import com.mthree.musiclist.models.User;
 import com.mthree.musiclist.services.SongsService;
 import com.mthree.musiclist.services.UsersService;
@@ -39,7 +40,7 @@ public class SongsController {
     ) {
         int uid;
         User user;
-        Song song;
+        SongDetailed song;
         
         model.addAttribute("saved", false);
         

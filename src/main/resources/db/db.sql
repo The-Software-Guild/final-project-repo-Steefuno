@@ -28,4 +28,4 @@ CREATE TABLE userSavedSong(
 	PRIMARY KEY(id)
 );
 
-SELECT * FROM user;
+SELECT * FROM song;

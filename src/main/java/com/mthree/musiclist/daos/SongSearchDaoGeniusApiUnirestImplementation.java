@@ -11,6 +11,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mthree.musiclist.models.Song;
+import com.mthree.musiclist.models.SongDetailed;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,10 +55,10 @@ public class SongSearchDaoGeniusApiUnirestImplementation implements SongSearchDa
      * @throws Exception
      */
     @Override
-    public Song getSong(int id) throws Exception {
+    public SongDetailed getSong(int id) throws Exception {
         HttpResponse<JsonNode> response;
         JSONObject songJson;
-        Song song;
+        SongDetailed song;
         
         // Request the song information from the API
         try {
@@ -91,10 +92,12 @@ public class SongSearchDaoGeniusApiUnirestImplementation implements SongSearchDa
         }
         
         // Wrap the information as a Song object
-        song = new Song(
+        song = new SongDetailed(
             songJson.getInt("id"),
             songJson.getString("title"),
-            songJson.getJSONObject("primary_artist").getString("name")
+            songJson.getJSONObject("primary_artist").getString("name"),
+            songJson.getString("header_image_url"),
+            songJson.getString("url")
         );
         return song;
     }

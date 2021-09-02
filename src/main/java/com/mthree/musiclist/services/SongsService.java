@@ -9,6 +9,7 @@ package com.mthree.musiclist.services;
 import com.mthree.musiclist.daos.SongDataDao;
 import com.mthree.musiclist.daos.SongSearchDao;
 import com.mthree.musiclist.models.Song;
+import com.mthree.musiclist.models.SongDetailed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
@@ -32,22 +33,17 @@ public class SongsService {
      * @throws Exception
      * @throws IndexOutOfBoundsException 
      */
-    public Song getSong(int id) throws Exception, IndexOutOfBoundsException {
-        Song song;
+    public SongDetailed getSong(int id) throws Exception, IndexOutOfBoundsException {
+        SongDetailed song;
         if (id <= 0) {
             throw new IndexOutOfBoundsException(
                 String.format("ID %d must be a positive integer", id)
             );
         }
         
-        // Try getting the song from the song data dao
-        try {
-            song = songDataDao.getSong(id);
-        } catch(DataAccessException e) {
-            // Get song from API endpoint if not found and then cache
-            song = songSearchDao.getSong(id);
-            songDataDao.addSong(song);
-        }
+        // Get song from API endpoint then cache
+        song = songSearchDao.getSong(id);
+        songDataDao.addSong(song);
         
         return song;
     }

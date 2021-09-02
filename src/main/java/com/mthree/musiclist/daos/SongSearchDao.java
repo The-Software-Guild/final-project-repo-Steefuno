@@ -7,6 +7,7 @@
 package com.mthree.musiclist.daos;
 
 import com.mthree.musiclist.models.Song;
+import com.mthree.musiclist.models.SongDetailed;
 
 /**
  * 
@@ -19,7 +20,7 @@ public interface SongSearchDao {
      * @return the Song information
      * @throws Exception
      */
-    public Song getSong(int id) throws Exception;
+    public SongDetailed getSong(int id) throws Exception;
     
     /**
      * Searches songs by a partial string query
