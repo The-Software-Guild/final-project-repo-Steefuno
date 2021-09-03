@@ -27,81 +27,93 @@
     <div
         class="container"
     >
-        <!-- Notifications -->
-        <div 
-            style="
-                background-color: #ff9955;
-                border: 4px;
-                border-style: solid;
-                border-color: #ff5555;
-                border-radius: 1em;
-                margin: 4px auto;
-                margin-bottom: 2px;
-                width: 0 auto;
-                text-align: center;
-            "
-            th:if="${(notifications != null) && (notifications.length > 0)}"
-        >
-            <p th:each="notification: ${notifications}" th:text="${notification}"/>
-        </div>
+    <!-- Notifications -->
+    <div 
+        style="
+            background-color: #ff9955;
+            border: 4px;
+            border-style: solid;
+            border-color: #ff5555;
+            border-radius: 1em;
+            margin: 4px auto;
+            margin-bottom: 2px;
+            width: 0 auto;
+            text-align: center;
+        "
+        th:if="${(notifications != null) && (notifications.length > 0)}"
+    >
+        <p th:each="notification: ${notifications}" th:text="${notification}"/>
+    </div>
 
-        <!-- Head -->
-        <div 
+    <!-- Head -->
+    <div 
+        style="
+            background-color: #E687FF;
+            border: 1px;
+            border-style: solid;
+            border-color: #8E37A6;
+            margin: 4px auto;
+            margin-bottom: 1em;
+            width: 100%;
+            padding: 4px;
+            padding-inline-start: 1em;
+            border-radius: 0.5em;
+        "
+    >
+        <a
+            href="/"
             style="
-                background-color: #eeddff;
-                margin: 4px auto;
-                margin-bottom: 1em;
-                width: 100%;
-                padding: 4px;
-                padding-inline-start: 1em;
-                border-radius: 0.5em;
+                color: #000000;
             "
         >
-            <a href="/" class="text-dark">
-                <h1>
-                    Search Music
-                </h1>
-            </a>
-        </div>
-        <div
+            <h1>
+                Search Music
+            </h1>
+        </a>
+    </div>
+    <div
+        style="
+            position: fixed;
+            right: 0;
+            top: 0;
+            margin: 2px;
+            z-index: 100;
+        "
+    >
+    </div>
+    <div
+        style="
+            position: fixed;
+            right: 0;
+            top: 0;
+            margin: 2px;
+            z-index: 100;
+        "
+    >
+        <a 
+            href="/login" 
+            class="btn btn-lg"
             style="
-                position: fixed;
-                right: 0;
-                top: 0;
-                margin: 2px;
-                z-index: 100;
+                background-color: #8E37A6;
+                color: #76A626;
+                border: 0px;
             "
+            th:if="${name} == null"
         >
-            <a 
-                href="/login" 
-                class="btn btn-outline-primary btn-lg"
-                style="
-                    background-color: #aaddff;
-                "
-                th:if="${name} == null"
-            >
-                Login
-            </a>
-        </div>
-        <div
+            Login
+        </a>
+        <a 
+            href="/getProfile" 
+            class="btn btn-lg"
             style="
-                position: fixed;
-                right: 0;
-                top: 0;
-                margin: 2px;
-                z-index: 100;
+                background-color: #8E37A6;
+                color: #76A626;
+                border: 0px;
             "
-        >
-            <a 
-                href="/getProfile" 
-                class="btn btn-outline-primary btn-lg"
-                style="
-                    background-color: #aaddff;
-                "
-                th:if="${name} != null"
-                th:text="${name}"
-            />
-        </div>
+            th:if="${name} != null"
+            th:text="${name}"
+        />
+    </div>
 
         <!-- Search Form -->
         <form
