@@ -122,6 +122,10 @@ public class UsersController {
         // Get the user id
         try {
             id = Integer.parseInt(idCookie);
+            
+            if (id <= 0) {
+                throw new NumberFormatException();
+            }
         } catch(NumberFormatException e) {
             redirectAttributes.addFlashAttribute(
                 "notifications",
