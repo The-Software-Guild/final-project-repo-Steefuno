@@ -37,7 +37,7 @@ public class SongSearchDaoGeniusApiUnirestImplementation implements SongSearchDa
         "x-rapidapi-key"
     ;
     final private static String HEADER_VALUE_API_KEY =
-        "ENTER YOUR RAPIDAPI KEY HERE"
+        "0bdd461970mshcf75ee1cdef7e94p15c5e2jsnc811ce3e6287"
     ;
     
     final private static String GET_SONG =
